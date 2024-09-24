@@ -31,46 +31,6 @@ def total_revenue(data: dict, financial_index):
         return None  # Return None if net_revenue field doesn't exist
 
 
-'''def total_borrowing(data: dict, financial_index):
-    """
-    Calculate the ratio of total borrowings to total revenue for the financial data.
-    """
-    financial = data.get("financials")[financial_index]
-    try:
-        total_revenue_value = total_revenue(data, financial_index)
-        # Get long-term and short-term borrowings
-        long_term_borrowings = financial["bs"]["lineItems"]["longTermBorrowings"]
-        short_term_borrowings = financial["bs"]["lineItems"]["shortTermBorrowings"]
-        total_borrowings = long_term_borrowings + short_term_borrowings
-        
-        # Calculate borrowing-to-revenue ratio
-        if total_revenue_value and total_revenue_value > 0:
-            return total_borrowings / total_revenue_value
-        else:
-            return None  # Return None if revenue is 0 or None
-    except KeyError:
-        return None  # Return None if required fields are missing'''
-
-
-'''def iscr(data: dict, financial_index):
-    """
-    Calculate the Interest Service Coverage Ratio (ISCR) for the financial data at the given index.
-    """
-    financial = data.get("financials")[financial_index]
-    try:
-        # Profit before interest and tax (PBIT)
-        pbit = financial["pnl"]["lineItems"]["pbit"]
-        # Depreciation
-        depreciation = financial["pnl"]["lineItems"]["depreciation"]
-        # Interest expense
-        interest_expense = financial["pnl"]["lineItems"]["interestExpense"]
-
-        # ISCR formula: (PBIT + Depreciation + 1) / (Interest expense + 1)
-        iscr_value = (pbit + depreciation + 1) / (interest_expense + 1)
-        return iscr_value
-    except KeyError:
-        return None  # Return None if any required field is missing'''
-
 
 def iscr_flag(data: dict, financial_index):
     """

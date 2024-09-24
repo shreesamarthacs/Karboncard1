@@ -31,7 +31,7 @@ def total_revenue(data: dict, financial_index):
         return None  # Return None if net_revenue field doesn't exist
 
 
-def total_borrowing(data: dict, financial_index):
+'''def total_borrowing(data: dict, financial_index):
     """
     Calculate the ratio of total borrowings to total revenue for the financial data.
     """
@@ -49,10 +49,10 @@ def total_borrowing(data: dict, financial_index):
         else:
             return None  # Return None if revenue is 0 or None
     except KeyError:
-        return None  # Return None if required fields are missing
+        return None  # Return None if required fields are missing'''
 
 
-def iscr(data: dict, financial_index):
+'''def iscr(data: dict, financial_index):
     """
     Calculate the Interest Service Coverage Ratio (ISCR) for the financial data at the given index.
     """
@@ -69,7 +69,7 @@ def iscr(data: dict, financial_index):
         iscr_value = (pbit + depreciation + 1) / (interest_expense + 1)
         return iscr_value
     except KeyError:
-        return None  # Return None if any required field is missing
+        return None  # Return None if any required field is missing'''
 
 
 def iscr_flag(data: dict, financial_index):
@@ -100,3 +100,44 @@ def borrowing_to_revenue_flag(data: dict, financial_index):
     if borrowing_ratio is not None:
         return FLAGS.GREEN if borrowing_ratio <= 0.25 else FLAGS.AMBER
     return FLAGS.WHITE  # If data is missing, return WHITE flag
+
+
+def total_borrowing(data: dict, financial_index):
+    financial = data.get("financials")[financial_index]
+    try:
+        total_revenue_value = total_revenue(data, financial_index)
+        print(f"Total Revenue (for borrowing ratio): {total_revenue_value}")
+
+        # Using get to avoid KeyError if the key does not exist
+        long_term_borrowings = financial["bs"].get("lineItems", {}).get("longTermBorrowings", 0)
+        short_term_borrowings = financial["bs"].get("lineItems", {}).get("shortTermBorrowings", 0)
+        print(f"Long Term Borrowings: {long_term_borrowings}")
+        print(f"Short Term Borrowings: {short_term_borrowings}")
+
+        total_borrowings = long_term_borrowings + short_term_borrowings
+        if total_revenue_value and total_revenue_value > 0:
+            return total_borrowings / total_revenue_value
+        return None  # If borrowings or revenue are missing
+    except KeyError as e:
+        print(f"KeyError in total_borrowing: {e}")
+        return None
+
+def iscr(data: dict, financial_index):
+    financial = data.get("financials")[financial_index]
+    try:
+        # Use profit_before_interest_and_tax directly
+        pbit = financial["pnl"]["lineItems"].get("profit_before_interest_and_tax", None)
+        depreciation = financial["pnl"]["lineItems"].get("depreciation", 0)
+        interest_expense = financial["pnl"]["lineItems"].get("interest", 0)  # Use interest field
+        print(f"PBIT: {pbit}, Depreciation: {depreciation}, Interest Expense: {interest_expense}")
+
+        if pbit is None:
+            print("Warning: PBIT (profit_before_interest_and_tax) is missing.")
+
+        if pbit is not None and depreciation is not None and interest_expense is not None:
+            iscr_value = (pbit + depreciation + 1) / (interest_expense + 1)
+            return iscr_value
+        return None  # If any of the required fields are missing
+    except KeyError as e:
+        print(f"KeyError in ISCR calculation: {e}")
+        return None

@@ -69,8 +69,8 @@ def total_borrowing(data: dict, financial_index):
         print(f"Total Revenue (for borrowing ratio): {total_revenue_value}")
 
         # Using get to avoid KeyError if the key does not exist
-        long_term_borrowings = financial["bs"].get("lineItems", {}).get("longTermBorrowings", 0)
-        short_term_borrowings = financial["bs"].get("lineItems", {}).get("shortTermBorrowings", 0)
+        long_term_borrowings = financial["bs"].get("liabilities", {}).get("long_term_borrowings", 0)
+        short_term_borrowings = financial["bs"].get("liabilities", {}).get("short_term_borrowings", 0)
         print(f"Long Term Borrowings: {long_term_borrowings}")
         print(f"Short Term Borrowings: {short_term_borrowings}")
 
